@@ -1,0 +1,170 @@
+
+<!DOCTYPE html>
+<html lang="ht">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>APPLE VIP BOT</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:#080d0b;color:white;
+ font-family:Arial,sans-serif;
+}
+header{
+ text-align:center;padding:28px 12px;
+ background:linear-gradient(135deg,#10291b,#07100b);
+ border-bottom:1px solid #c5a64b;
+}
+.logo{font-size:48px}
+h1{color:#e5c45d;letter-spacing:3px}
+header p{color:#aab8ae}
+main{max-width:650px;margin:auto;padding:18px}
+.card{
+ background:#111b15;border:1px solid #294b35;
+ border-radius:15px;padding:18px;margin-bottom:17px;
+}
+h2{color:#e5c45d;font-size:19px}
+button{
+ background:#c5a64b;color:#10150e;
+ border:0;border-radius:9px;padding:13px;
+ font-weight:bold;cursor:pointer;
+}
+.platforms{display:flex;gap:8px}
+.platforms button{flex:1}
+input,select{
+ width:100%;padding:13px;margin:8px 0;
+ border-radius:8px;border:1px solid #385340;
+ background:#08110b;color:white;
+}
+.result{
+ background:#08130c;padding:14px;border-radius:10px;
+ color:#e5c45d;margin-top:12px;
+}
+.small{color:#aab8ae;font-size:12px}
+footer{text-align:center;color:#87958a;padding:25px}
+</style>
+</head>
+<body>
+
+<header>
+<div class="logo">🍏</div>
+<h1>APPLE VIP BOT</h1>
+<p>PERSONAL ANALYSIS SYSTEM</p>
+</header>
+
+<main>
+
+<div class="card">
+<h2>🎮 CHWAZI PLATFÒM</h2>
+<div class="platforms">
+<button onclick="platform('1xBet')">1xBet</button>
+<button onclick="platform('Win-Win')">Win-Win</button>
+<button onclick="platform('Paripesa')">Paripesa</button>
+</div>
+<p id="selected" class="small">Pa gen platfòm chwazi.</p>
+</div>
+
+<div class="card">
+<h2>🍏 APPLE HUNTER</h2>
+<p>Ekri rezilta ou obsève yo pou swiv jwèt la.</p>
+<label>Nivo jwèt la</label>
+<select id="level">
+<option value="1">Nivo 1</option>
+<option value="2">Nivo 2</option>
+<option value="3">Nivo 3</option>
+<option value="4">Nivo 4</option>
+<option value="5">Nivo 5</option>
+<option value="6">Nivo 6</option>
+<option value="7">Nivo 7</option>
+<option value="8">Nivo 8</option>
+<option value="9">Nivo 9</option>
+<option value="10">Nivo 10</option>
+</select>
+<label>Rezilta obsève</label>
+<select id="outcome">
+<option value="safe">Pòm bon</option>
+<option value="boom">Bonm</option>
+</select>
+<button onclick="record()">ANREJISTRE REZILTA</button>
+<div class="result" id="history">
+Pa gen rezilta anrejistre.
+</div>
+<p class="small">Istwa rezilta yo pa predi pwochen rezilta a.</p>
+</div>
+
+<div class="card">
+<h2>💰 VIP CASHOUT</h2>
+<label>Miz ou (USD)</label>
+<input type="number" id="stake" placeholder="Egzanp: 5">
+<label>Kòt ou chwazi</label>
+<input type="number" id="odd" placeholder="Egzanp: 2.5">
+<button onclick="calculate()">KALKILE</button>
+<div class="result" id="cashout">
+Rezilta kalkil la ap parèt isit la.
+</div>
+</div>
+
+<div class="card">
+<h2>📊 ESTATISTIK</h2>
+<div id="stats">0 rezilta anrejistre.</div>
+</div>
+
+<div class="card">
+<h2>⚠️ ENFÒMASYON</h2>
+<p class="small">
+APPLE VIP BOT se yon zouti pou swiv rezilta,
+analize done ak kalkile kòt. Li pa kapab
+garanti prediksyon, ni konnen davans kote bonm
+yo ye. Pa gen garanti pwofi.
+</p>
+</div>
+
+</main>
+
+<footer>APPLE VIP BOT © 2026</footer>
+
+<script>
+let results=[];
+
+function platform(name){
+ document.getElementById('selected').textContent=
+ 'Platfòm chwazi: '+name;
+}
+
+function record(){
+ let level=document.getElementById('level').value;
+ let outcome=document.getElementById('outcome').value;
+ results.push({level,outcome});
+ update();
+}
+
+function update(){
+ let safe=results.filter(x=>x.outcome==='safe').length;
+ let boom=results.length-safe;
+ document.getElementById('history').innerHTML=
+ 'Dènye rezilta: Nivo '+results[results.length-1].level+
+ '<br>Total rezilta: '+results.length;
+ document.getElementById('stats').innerHTML=
+ 'Pòm bon: '+safe+'<br>Bonm: '+boom+
+ '<br>Total: '+results.length;
+}
+
+function calculate(){
+ let stake=Number(document.getElementById('stake').value);
+ let odd=Number(document.getElementById('odd').value);
+ if(stake<=0||odd<=0){
+ document.getElementById('cashout').textContent=
+ 'Antre yon miz ak yon kòt ki valab.';
+ return;
+ }
+ let total=stake*odd;
+ let profit=total-stake;
+ document.getElementById('cashout').innerHTML=
+ 'Retou potansyèl: $'+total.toFixed(2)+
+ '<br>Pwofi potansyèl: $'+profit.toFixed(2)+
+ '<br><small>Sa pa garanti ou ap genyen.</small>';
+}
+</script>
+</body>
+</html>

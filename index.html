@@ -168,8 +168,9 @@ async function loadHistory(){
  rows.length?((safe/rows.length)*100).toFixed(1)+"%":"0%";
  document.getElementById("history").innerHTML=rows.length?
  rows.map(x=>`<div class="stat"><span>${escapeHTML(x.platform)} • Nivo ${x.level}</span><b class="${x.outcome==="safe"?"good":"bad"}">${x.outcome==="safe"?"SAFE":"BONM"}</b></div>`).join("")
- :"Pa gen rezilta pou kounye a.";
-}await loadLevelStats();
+ :"Pa gen rezilta pou kounye a.";await loadLevelStats();
+}
+}
 function calculate(){
  const stake=Number(document.getElementById("stake").value);
  const mult=Number(document.getElementById("multiplier").value);

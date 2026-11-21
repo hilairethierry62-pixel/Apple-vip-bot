@@ -1,170 +1,207 @@
-
 <!DOCTYPE html>
 <html lang="ht">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>APPLE VIP BOT</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{box-sizing:border-box}
-body{
- margin:0;background:#080d0b;color:white;
- font-family:Arial,sans-serif;
-}
-header{
- text-align:center;padding:28px 12px;
- background:linear-gradient(135deg,#10291b,#07100b);
- border-bottom:1px solid #c5a64b;
-}
-.logo{font-size:48px}
-h1{color:#e5c45d;letter-spacing:3px}
-header p{color:#aab8ae}
-main{max-width:650px;margin:auto;padding:18px}
-.card{
- background:#111b15;border:1px solid #294b35;
- border-radius:15px;padding:18px;margin-bottom:17px;
-}
-h2{color:#e5c45d;font-size:19px}
-button{
- background:#c5a64b;color:#10150e;
- border:0;border-radius:9px;padding:13px;
- font-weight:bold;cursor:pointer;
-}
-.platforms{display:flex;gap:8px}
-.platforms button{flex:1}
-input,select{
- width:100%;padding:13px;margin:8px 0;
- border-radius:8px;border:1px solid #385340;
- background:#08110b;color:white;
-}
-.result{
- background:#08130c;padding:14px;border-radius:10px;
- color:#e5c45d;margin-top:12px;
-}
-.small{color:#aab8ae;font-size:12px}
-footer{text-align:center;color:#87958a;padding:25px}
+body{margin:0;background:#07120d;color:#f5f5f5;font-family:Arial,sans-serif;padding:18px}
+.container{max-width:700px;margin:auto}
+header{text-align:center;padding:25px 10px}
+h1{color:#e9c65b;letter-spacing:2px}
+.card{background:#10251a;border:1px solid #31553b;border-radius:14px;padding:18px;margin:15px 0}
+h2{color:#e9c65b;font-size:19px}
+input,select,button{width:100%;padding:13px;margin:7px 0;border-radius:8px;border:1px solid #46634c;background:#07120d;color:white;font-size:15px}
+button{background:#d9b84f;color:#10150d;font-weight:bold;border:0;cursor:pointer}
+button.secondary{background:#244632;color:white}
+small,.muted{color:#aab9ad}
+.stat{display:flex;justify-content:space-between;padding:9px;border-bottom:1px solid #31553b}
+.hidden{display:none}
+.good{color:#6ee79a}.bad{color:#ff8585}
 </style>
 </head>
 <body>
-
+<div class="container">
 <header>
-<div class="logo">🍏</div>
-<h1>APPLE VIP BOT</h1>
-<p>PERSONAL ANALYSIS SYSTEM</p>
+<h1>🍏 APPLE VIP BOT</h1>
+<p>APPLE HUNTER • VIP CASHOUT</p>
+<small>Outil personnel d'analyse et de suivi</small>
 </header>
 
-<main>
+<section class="card" id="login">
+<h2>Connexion administrateur</h2>
+<input id="email" type="email" placeholder="Adresse email">
+<input id="password" type="password" placeholder="Mot de passe">
+<button onclick="login()">SE CONNECTER</button>
+<p id="loginMsg" class="muted"></p>
+</section>
+
+<div id="app" class="hidden">
+<div class="card">
+<h2>Tableau de bord</h2>
+<div class="stat"><span>Statut</span><b class="good">Connecté</b></div>
+<div class="stat"><span>Accès</span><b>Personnel</b></div>
+<button class="secondary" onclick="logout()">DÉCONNEXION</button>
+</div>
 
 <div class="card">
-<h2>🎮 CHWAZI PLATFÒM</h2>
-<div class="platforms">
-<button onclick="platform('1xBet')">1xBet</button>
-<button onclick="platform('Win-Win')">Win-Win</button>
-<button onclick="platform('Paripesa')">Paripesa</button>
-</div>
-<p id="selected" class="small">Pa gen platfòm chwazi.</p>
-</div>
-
-<div class="card">
-<h2>🍏 APPLE HUNTER</h2>
-<p>Ekri rezilta ou obsève yo pou swiv jwèt la.</p>
-<label>Nivo jwèt la</label>
+<h2>🎮 Enregistrer une partie</h2>
+<label>Plateforme</label>
+<select id="platform">
+<option>1xBet</option><option>Win-Win</option><option>Paripesa</option>
+</select>
+<label>Niveau</label>
 <select id="level">
-<option value="1">Nivo 1</option>
-<option value="2">Nivo 2</option>
-<option value="3">Nivo 3</option>
-<option value="4">Nivo 4</option>
-<option value="5">Nivo 5</option>
-<option value="6">Nivo 6</option>
-<option value="7">Nivo 7</option>
-<option value="8">Nivo 8</option>
-<option value="9">Nivo 9</option>
-<option value="10">Nivo 10</option>
+<option value="1">Niveau 1</option><option value="2">Niveau 2</option>
+<option value="3">Niveau 3</option><option value="4">Niveau 4</option>
+<option value="5">Niveau 5</option><option value="6">Niveau 6</option>
+<option value="7">Niveau 7</option><option value="8">Niveau 8</option>
+<option value="9">Niveau 9</option><option value="10">Niveau 10</option>
 </select>
-<label>Rezilta obsève</label>
+<label>Rezilta ou obsève</label>
 <select id="outcome">
-<option value="safe">Pòm bon</option>
-<option value="boom">Bonm</option>
+<option value="safe">🍏 Safe / San bonm</option>
+<option value="bomb">💣 Bonm</option>
 </select>
-<button onclick="record()">ANREJISTRE REZILTA</button>
-<div class="result" id="history">
-Pa gen rezilta anrejistre.
-</div>
-<p class="small">Istwa rezilta yo pa predi pwochen rezilta a.</p>
+<button onclick="saveGame()">ANREJISTRE REZILTA</button>
+<p id="saveMsg" class="muted"></p>
 </div>
 
 <div class="card">
-<h2>💰 VIP CASHOUT</h2>
-<label>Miz ou (USD)</label>
-<input type="number" id="stake" placeholder="Egzanp: 5">
-<label>Kòt ou chwazi</label>
-<input type="number" id="odd" placeholder="Egzanp: 2.5">
-<button onclick="calculate()">KALKILE</button>
-<div class="result" id="cashout">
-Rezilta kalkil la ap parèt isit la.
-</div>
+<h2>📊 Apple Hunter — Estatistik</h2>
+<p class="muted">Estatistik sa yo baze sèlman sou rezilta ou anrejistre yo. Yo pa predi pwochen pati a.</p>
+<div class="stat"><span>Total anrejistre</span><b id="total">0</b></div>
+<div class="stat"><span>Safe</span><b class="good" id="safe">0</b></div>
+<div class="stat"><span>Bonm</span><b class="bad" id="bomb">0</b></div>
+<div class="stat"><span>Pousantaj safe obsève</span><b id="rate">0%</b></div>
+<button class="secondary" onclick="loadHistory()">RAFRECHI ESTATISTIK</button>
 </div>
 
 <div class="card">
-<h2>📊 ESTATISTIK</h2>
-<div id="stats">0 rezilta anrejistre.</div>
+<h2>💰 VIP Cashout Calculator</h2>
+<label>Miz ou (stake)</label>
+<input id="stake" type="number" min="0" step="0.01" placeholder="Egzanp: 5">
+<label>Multiplikatè</label>
+<input id="multiplier" type="number" min="1" step="0.01" placeholder="Egzanp: 2.5">
+<button onclick="calculate()">KALKILE CASHOUT</button>
+<div class="stat"><span>Montan total</span><b id="totalCash">$0.00</b></div>
+<div class="stat"><span>Pwofi nèt</span><b id="profit">$0.00</b></div>
 </div>
 
 <div class="card">
-<h2>⚠️ ENFÒMASYON</h2>
-<p class="small">
-APPLE VIP BOT se yon zouti pou swiv rezilta,
-analize done ak kalkile kòt. Li pa kapab
-garanti prediksyon, ni konnen davans kote bonm
-yo ye. Pa gen garanti pwofi.
-</p>
+<h2>🎟️ Kòd Promo</h2>
+<input id="promo" placeholder="Ekri yon kòd promo">
+<button onclick="addPromo()">AJOUTE KÒD</button>
+<p id="promoMsg" class="muted"></p>
+<div id="promoList"></div>
 </div>
 
-</main>
-
-<footer>APPLE VIP BOT © 2026</footer>
+<div class="card">
+<h2>📜 Dènye rezilta yo</h2>
+<div id="history" class="muted">Pa gen rezilta pou kounye a.</div>
+</div>
+</div>
+</div>
 
 <script>
-let results=[];
+const SUPABASE_URL = "https://sxugguoaibavtsqpifot.supabase.co";
+const SUPABASE_KEY = "sb_publishable_AWdStLCBMESvARPgZdm1Mw_doacOUGd";
+const db = window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-function platform(name){
- document.getElementById('selected').textContent=
- 'Platfòm chwazi: '+name;
-}
-
-function record(){
- let level=document.getElementById('level').value;
- let outcome=document.getElementById('outcome').value;
- results.push({level,outcome});
- update();
-}
-
-function update(){
- let safe=results.filter(x=>x.outcome==='safe').length;
- let boom=results.length-safe;
- document.getElementById('history').innerHTML=
- 'Dènye rezilta: Nivo '+results[results.length-1].level+
- '<br>Total rezilta: '+results.length;
- document.getElementById('stats').innerHTML=
- 'Pòm bon: '+safe+'<br>Bonm: '+boom+
- '<br>Total: '+results.length;
-}
-
-function calculate(){
- let stake=Number(document.getElementById('stake').value);
- let odd=Number(document.getElementById('odd').value);
- if(stake<=0||odd<=0){
- document.getElementById('cashout').textContent=
- 'Antre yon miz ak yon kòt ki valab.';
- return;
+async function login(){
+ const email=document.getElementById("email").value.trim();
+ const password=document.getElementById("password").value;
+ const msg=document.getElementById("loginMsg");
+ msg.textContent="Connexion en cours...";
+ const {data,error}=await db.auth.signInWithPassword({email,password});
+ if(error){msg.textContent="Erreur: "+error.message;return;}
+ const {data:admin,error:adminError}=await db.from("bot_admins")
+ .select("user_id").eq("user_id",data.user.id).maybeSingle();
+ if(adminError || !admin){
+  await db.auth.signOut();
+  msg.textContent="Accès administrateur refusé.";
+  return;
  }
- let total=stake*odd;
- let profit=total-stake;
- document.getElementById('cashout').innerHTML=
- 'Retou potansyèl: $'+total.toFixed(2)+
- '<br>Pwofi potansyèl: $'+profit.toFixed(2)+
- '<br><small>Sa pa garanti ou ap genyen.</small>';
+ document.getElementById("login").classList.add("hidden");
+ document.getElementById("app").classList.remove("hidden");
+ await loadHistory();
+ await loadPromos();
 }
+async function logout(){
+ await db.auth.signOut();
+ location.reload();
+}
+async function saveGame(){
+ const msg=document.getElementById("saveMsg");
+ const {data:userData}=await db.auth.getUser();
+ if(!userData.user){msg.textContent="Reconnecte-toi.";return;}
+ const record={
+  platform:document.getElementById("platform").value,
+  level:Number(document.getElementById("level").value),
+  outcome:document.getElementById("outcome").value
+ };
+ const {error}=await db.from("game_history").insert(record);
+ if(error){msg.textContent="Erreur: "+error.message;return;}
+ msg.textContent="Rezilta anrejistre.";
+ await loadHistory();
+}
+async function loadHistory(){
+ const {data,error}=await db.from("game_history")
+ .select("platform,level,outcome,recorded_at")
+ .order("recorded_at",{ascending:false}).limit(100);
+ if(error){document.getElementById("history").textContent=error.message;return;}
+ const rows=data||[];
+ const safe=rows.filter(x=>x.outcome==="safe").length;
+ const bomb=rows.filter(x=>x.outcome==="bomb").length;
+ document.getElementById("total").textContent=rows.length;
+ document.getElementById("safe").textContent=safe;
+ document.getElementById("bomb").textContent=bomb;
+ document.getElementById("rate").textContent=
+ rows.length?((safe/rows.length)*100).toFixed(1)+"%":"0%";
+ document.getElementById("history").innerHTML=rows.length?
+ rows.map(x=>`<div class="stat"><span>${escapeHTML(x.platform)} • Nivo ${x.level}</span><b class="${x.outcome==="safe"?"good":"bad"}">${x.outcome==="safe"?"SAFE":"BONM"}</b></div>`).join("")
+ :"Pa gen rezilta pou kounye a.";
+}
+function calculate(){
+ const stake=Number(document.getElementById("stake").value);
+ const mult=Number(document.getElementById("multiplier").value);
+ if(stake<=0||mult<1){alert("Mete yon miz ak yon multiplikatè valab.");return;}
+ document.getElementById("totalCash").textContent="$"+(stake*mult).toFixed(2);
+ document.getElementById("profit").textContent="$"+(stake*(mult-1)).toFixed(2);
+}
+async function addPromo(){
+ const code=document.getElementById("promo").value.trim();
+ const msg=document.getElementById("promoMsg");
+ if(!code){msg.textContent="Ekri yon kòd avan.";return;}
+ const {error}=await db.from("promo_codes").insert({code:code,is_active:true});
+ if(error){msg.textContent="Erreur: "+error.message;return;}
+ msg.textContent="Kòd ajoute.";
+ document.getElementById("promo").value="";
+ await loadPromos();
+}
+async function loadPromos(){
+ const {data,error}=await db.from("promo_codes").select("code,is_active,uses").order("created_at",{ascending:false});
+ if(error){document.getElementById("promoList").textContent=error.message;return;}
+ document.getElementById("promoList").innerHTML=(data||[]).map(p=>
+ `<div class="stat"><span>${escapeHTML(p.code)}</span><b>${p.is_active?"Aktif":"Inaktif"} • ${p.uses} itilizasyon</b></div>`
+ ).join("")||"Pa gen kòd.";
+}
+function escapeHTML(value){
+ return String(value).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+db.auth.getSession().then(async({data})=>{
+ if(data.session){
+  const {data:admin}=await db.from("bot_admins").select("user_id")
+  .eq("user_id",data.session.user.id).maybeSingle();
+  if(admin){
+   document.getElementById("login").classList.add("hidden");
+   document.getElementById("app").classList.remove("hidden");
+   await loadHistory();await loadPromos();
+  }
+ }
+});
 </script>
 </body>
 </html>

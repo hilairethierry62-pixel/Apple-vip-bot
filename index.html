@@ -169,7 +169,7 @@ async function loadHistory(){
  document.getElementById("history").innerHTML=rows.length?
  rows.map(x=>`<div class="stat"><span>${escapeHTML(x.platform)} • Nivo ${x.level}</span><b class="${x.outcome==="safe"?"good":"bad"}">${x.outcome==="safe"?"SAFE":"BONM"}</b></div>`).join("")
  :"Pa gen rezilta pou kounye a.";
-}
+}await loadLevelStats();
 function calculate(){
  const stake=Number(document.getElementById("stake").value);
  const mult=Number(document.getElementById("multiplier").value);
@@ -193,6 +193,33 @@ async function loadPromos(){
  document.getElementById("promoList").innerHTML=(data||[]).map(p=>
  `<div class="stat"><span>${escapeHTML(p.code)}</span><b>${p.is_active?"Aktif":"Inaktif"} • ${p.uses} itilizasyon</b></div>`
  ).join("")||"Pa gen kòd.";
+}async function loadLevelStats(){
+ const box = document.getElementById("levelStats");
+ box.textContent = "Ap kalkile...";
+
+ const {data,error} = await db.from("game_history")
+ .select("level,outcome");
+
+ if(error){
+  box.textContent = "Erreur: " + error.message;
+  return;
+ }
+
+ let html = "";
+
+ for(let n=1;n<=10;n++){
+  const rows = (data||[]).filter(x=>Number(x.level)===n);
+  const safe = rows.filter(x=>x.outcome==="safe").length;
+  const bomb = rows.filter(x=>x.outcome==="bomb").length;
+  const rate = rows.length ? (safe/rows.length*100).toFixed(1) : "0.0";
+
+  html += `<div class="stat">
+   <span>Niveau ${n} — ${rows.length} parties</span>
+   <b>${safe} Safe | ${bomb} Bonm | ${rate}%</b>
+  </div>`;
+ }
+
+ box.innerHTML = html;
 }
 function escapeHTML(value){
  return String(value).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
